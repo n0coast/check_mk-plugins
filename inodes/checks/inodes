@@ -1,0 +1,55 @@
+#!/usr/bin/python
+# Simple check to compare inodes %used against a fixed percentage
+#
+# <<<inodes>>>
+#/dev/mapper/vg_system-lv_tmp           ext4   131072    59  131013    1% /tmp
+#/dev/mapper/vg_system-lv_var           ext4   393216  3029  390187    1% /var
+
+# Filesystems to ignore (shouldn't be sent by agent anyway)
+inventory_df_exclude_fs            = [ 'nfs', 'smbfs', 'cifs', 'iso9660' ]
+inventory_df_exclude_mountpoints   = [ '/dev' ]
+
+# set default warn and crit
+inodes_default_values = (80, 90)
+
+def inventory_inodes(info):
+    mplist = []
+    for line in info:
+        if line[1] in inventory_df_exclude_fs:
+            continue # ignore this filesystem type
+
+        if line[2] == '-' or int(line[2]) == 0 or line[5] == '-':
+            continue # exclude filesystems without size
+
+        mountpoint = line[6]
+        if mountpoint in inventory_df_exclude_mountpoints:
+            continue # exclude this mount point (/tmp, /proc, whatever user wants)
+
+        mplist.append( (mountpoint, "inodes_default_values") )
+    return mplist
+
+def check_inodes(item, params, info):
+    warn, crit = inodes_default_values
+    status = 0
+
+    for line in info:
+        if line[6] == item:
+            used_perc = float(line[5].strip('%'))
+            mountpoint = line[6]
+            infotext = "%.1f%% used" % used_perc
+            perf_var = mountpoint
+            perfdata = [(perf_var, str(used_perc) + '%', warn, crit)]
+            if used_perc > crit:
+                status = 2
+            elif used_perc > warn:
+                status = 1
+            else:
+                status = 0
+    return (status, infotext, perfdata)
+
+check_info['inodes'] = {
+    "check_function"          : check_inodes,
+    "inventory_function"      : inventory_inodes,
+    "service_description"     : "inodes_%s",
+    "has_perfdata"            : True,
+}

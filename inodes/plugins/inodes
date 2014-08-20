@@ -1,0 +1,3 @@
+echo '<<<inodes>>>'
+excludefs="-x smbfs -x tmpfs -x cifs -x iso9660 -x udf -x nfsv4 -x nfs -x mvfs -x zfs"
+df -PTlki $excludefs | sed 1d
