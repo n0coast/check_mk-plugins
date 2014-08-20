@@ -1,0 +1,54 @@
+#!/usr/bin/python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+def check_graphite_data_arguments(params):
+    #description, settings = params
+    print params
+    description, mode, options = params
+    args = ''
+
+    if "trad_thresh" in mode:
+        args += ' -w %f -c %f' % (
+            mode["trad_thresh"][0],
+            mode["trad_thresh"][1])
+
+    if "url" in mode:
+        args += ' -u %s' % quote_shell_string(mode["url"])
+
+    if "reverse" in mode:
+        args += ' -r'
+
+    if "average" in options:
+        args += ' -s %d' % options["average"]
+
+    if "diffgraph" in mode:
+        args += ' --d1 %s --d2 %s' % (
+            quote_shell_string(mode["diffgraph"][0]),
+            quote_shell_string(mode["diffgraph"][1]))
+
+    if "hw_url" in mode:
+        args += ' -W -u %s'  % quote_shell_string(mode["hw_url"])
+
+    if "hw_upper" in mode:
+        args += ' -U'
+
+    if "hw_lower" in mode:
+        args += ' -L'
+
+    if "perf" in options:
+        args += ' -p'
+
+    return args
+
+def check_graphite_data_desc(params):
+    if params[0].startswith("^"):
+        return params[0][1:]
+    return "Graphite %s" % params[0]
+
+active_check_info['graphite'] = {
+    "command_line"        : '$USER1$/check_graphite_data $ARG1$',
+    "argument_function"   : check_graphite_data_arguments,
+    "service_description" : check_graphite_data_desc,
+    "has_perfdata"        : True,
+}
+
