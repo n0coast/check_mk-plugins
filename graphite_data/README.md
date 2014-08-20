@@ -1,5 +1,5 @@
 * graphite_data-1.0.mkp: check_mk plugin, includes active_checks_graphite.py
-check_grpahtie_data and check_mk_active-graphite.php, still need to manually
+check_graphite_data and check_mk_active-graphite.php, still need to manually
 install libexec/check_graphite_data
 * active_checks_graphite.py: wato plugin to allow configuring check from GUI,
 if not using .mkp install into ~/local/share/check_mk/web/plugins/wato/
