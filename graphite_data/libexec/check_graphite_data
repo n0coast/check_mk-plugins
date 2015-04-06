@@ -39,7 +39,6 @@ def pull_graphite_data(url):
     try:
         data = urllib2.urlopen(url).read()
 	if len(data) == 0:
-	    print "Error: No data was returned. Did you specify an existing metric? - " + url
 	    sys.exit(STATE_UNKNOWN)
         return data
     except:
@@ -52,14 +51,16 @@ def eval_graphite_data(data, seconds):
 
     sample_period = int(data.split('|')[0].split(',')[-1])
     all_data_points = data.split('|')[-1].split(',')
-
+ 
     # Evaluate what graphite returned, should either be a float, or None
     # First, if the number of seconds of data we want to examine is smaller or
     # equals the graphite sample period, just grab the latest data point.
     # If that data point is None, grab the one before it.
     # If that is None too, return 0.0.
     if seconds <= sample_period:
-        if not all_data_points[-1].startswith("None"):
+        if len(all_data_points) == 1 and str(all_data_points[0]) == 'None\n':
+            data_value = 0.0
+        elif not all_data_points[-1].startswith("None"):
             data_value = float(all_data_points[-1])
         elif not all_data_points[-2].startswith("None"):
             data_value = float(all_data_points[-2])
