@@ -46,7 +46,7 @@ def check_graphite_data_desc(params):
     return "Graphite %s" % params[0]
 
 active_check_info['graphite'] = {
-    "command_line"        : '$USER1$/check_graphite_data $ARG1$',
+    "command_line"        : '$USER2$/check_graphite_data $ARG1$',
     "argument_function"   : check_graphite_data_arguments,
     "service_description" : check_graphite_data_desc,
     "has_perfdata"        : True,
