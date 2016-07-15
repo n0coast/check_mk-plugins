@@ -7,8 +7,8 @@ if not using .mkp install into ~/local/share/check_mk/web/plugins/wato/
 
 * check_graphite_data: defines check parameters/fields to check_mk,
 if not using .mkp install into ~/local/share/check_mk/checks/
-Based on etsy `chec_graphite_data` with minor tweaks to make it work
-in the cmk environment a little better.
+Based on etsy `check_graphite_data` (https://github.com/etsy/nagios_tools/blob/master/check_graphite_data)
+with minor tweaks to make it work in the cmk environment a little better.
 
 * check_mk_active-graphite.php: defines graph format for pnp4nagios,
 if not using .mkp install into ~/local/share/check_mk/pnp-templates/
